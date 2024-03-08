@@ -47,15 +47,15 @@ async function handleLogin(username, password, deviceId) {
   }
 }
 
-async function getHistories(token, accountId, deviceId) {
+async function getHistories(token, accountId, fromDate, toDate, deviceId) {
   const data = {
     pageNumber: 1,
     pageSize: 400,
     accountNo: accountId,
     currency: "VND",
     maxAcentrysrno: "",
-    fromDate: "20231002",
-    toDate: "20240707",
+    fromDate: fromDate,
+    toDate: toDate,
     keyword: "",
   };
 
@@ -96,5 +96,6 @@ async function getHistories(token, accountId, deviceId) {
     throw error;
   }
 }
+
 
 module.exports = { handleLogin, getHistories };

@@ -14,7 +14,12 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 #### Tham số
 - `username` (Tên đăng nhập)
 - `password` (Mật khẩu)
-
+```json
+{
+    "username": "Tên đăng nhập tpbank",
+    "password": "Mật khẩu đăng nhập"
+}
+```
 #### Phản hồi
 ```json
 {
@@ -29,7 +34,14 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 - `accountId` (Số tài khoản cần lấy lịch sử)
 - `fromDate` (Lấy từ ngày)
 - `toDate` (Đến ngày)
-
+```json
+{
+    "accessToken": "Token sau khi login"
+    "accountId": "Số tài khoản",
+    "fromDate": "Định dạng năm tháng ngày: 20231002", 
+    "toDate": "Định dạng năm tháng ngày: 20231002"
+}
+```
 #### Phản hồi
 ```json
 {

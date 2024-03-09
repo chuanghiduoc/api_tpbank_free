@@ -36,7 +36,7 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 - `toDate` (Đến ngày)
 ```json
 {
-    "accessToken": "Token sau khi login"
+    "accessToken": "Token sau khi login",
     "accountId": "Số tài khoản",
     "fromDate": "Định dạng năm tháng ngày: 20231002", 
     "toDate": "Định dạng năm tháng ngày: 20231002"
@@ -121,6 +121,22 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
     ]
 }
 ```
+## Yêu cầu cài đặt
+- Cài Node.js bản 20.x trở lên
+
+## Hướng dẫn chạy trên Localhost cho người mới
+- Mở folder chứa code: có file index.js
+- Mở terminal hoặc cmd tại thư mục đó, chạy lệnh
+```json
+    npm i
+```
+- Sau khi cài đặt hoàn tất chạy server lên bằng 
+```json
+    npm start
+```
+- Mặc định PORT là 3000 => Host = localhost:3000
+- Dùng Postman hoặc các phần mềm tương tự để test với các endpoint là /login và /histories (ví dụ: localhost:3000/login) sau đó điền các tham số đầu vào và gửi để nhận response
+
 ## Bản quyền
 
 - Mã nguồn của dịch vụ này được công khai, cho phép bất kỳ ai xem, sửa đổi, và cải thiện nó.

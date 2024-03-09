@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const { getDeviceId } = require("./utils.js");
-const { handleLogin, getHistories, refreshToken } = require("./mainTpbank/main");
+const { handleLogin, getHistories } = require("./mainTpbank/main");
 const cors = require("cors");
 
 app.use(bodyParser.json());
@@ -15,8 +15,7 @@ app.post("/login", async (req, res) => {
     const deviceId = getDeviceId();
     if (deviceId) this.deviceId = deviceId;
     const login = await handleLogin(username, password, deviceId);
-    return res.json({ accessToken: login.access_token
-    });
+    return res.json({ accessToken: login.access_token });
   } catch (error) {
     res.json({error : error.data})
   }

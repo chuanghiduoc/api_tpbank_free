@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+const moment = require('moment-timezone');
 async function handleLogin(username, password, deviceId) {
   const data = {
     username,
@@ -47,7 +47,13 @@ async function handleLogin(username, password, deviceId) {
   }
 }
 
-async function getHistories(token, accountId, fromDate, toDate, deviceId) {
+async function getHistories(token, accountId, deviceId) {
+  const fromDate = moment()
+    .tz('Asia/Ho_Chi_Minh')
+    .subtract(14, 'days')
+    .format('YYYYMMDD');
+  const toDate = moment().tz('Asia/Ho_Chi_Minh').format('YYYYMMDD');
+
   const data = {
     pageNumber: 1,
     pageSize: 400,

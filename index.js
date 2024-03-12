@@ -23,13 +23,13 @@ app.post("/login", async (req, res) => {
 
 app.post("/histories", async (req, res) => {
   try {
-    const { accessToken, accountId, fromDate, toDate } = req.body;
-    const histories = await getHistories(accessToken, accountId, fromDate, toDate, this.deviceId);
-    //Lấy dữ liệu ở trường creditDebitIndicator = CRDT (Nhận tiền), DBIT(Chuyển tiền đi) 
-    const filteredTransactions = histories.transactionInfos.filter(transaction => transaction.creditDebitIndicator === 'CRDT');
-    //Lọc và loại bỏ dữ liệu có trường Category
-    const transactionsWithoutCategory = filteredTransactions.map(({ category, ...transaction }) => transaction);
-    return res.json({ info: transactionsWithoutCategory });
+    const { accessToken, accountId } = req.body;
+    const histories = await getHistories(accessToken, accountId, this.deviceId);
+    //Lấy dữ liệu ở trường creditDebitIndicator = CRDT (Cộng tiền), DBIT(Trừ tiền) 
+    // const filteredTransactions = histories.transactionInfos.filter(transaction => transaction.creditDebitIndicator === 'CRDT');
+    // //Lọc và loại bỏ dữ liệu có trường Category
+    // const transactionsWithoutCategory = filteredTransactions.map(({ category, ...transaction }) => transaction);
+    return res.json({ info: histories });
   } catch (error) {
     res.json({ error: error.data });
   }

@@ -32,14 +32,10 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 #### Tham số
 - `accessToken` (Token vừa lấy được ở Login)
 - `accountId` (Số tài khoản cần lấy lịch sử)
-- `fromDate` (Lấy từ ngày)
-- `toDate` (Đến ngày)
 ```json
 {
     "accessToken": "Token sau khi login",
-    "accountId": "Số tài khoản",
-    "fromDate": "Định dạng năm tháng ngày: 20231002", 
-    "toDate": "Định dạng năm tháng ngày: 20231002"
+    "accountId": "Số tài khoản"
 }
 ```
 #### Phản hồi

@@ -6,11 +6,12 @@ async function handleLogin(username, password, deviceId) {
     password,
     step_2FA: "VERIFY",
     deviceId,
+    transactionId: "",
   };
 
   const config = {
     headers: {
-      APP_VERSION: "2024.02.24",
+      APP_VERSION: "2024.06.28",
       Accept: "application/json, text/plain, */*",
       "Accept-Language": "vi",
       Authorization: "Bearer",
@@ -20,16 +21,16 @@ async function handleLogin(username, password, deviceId) {
       DEVICE_NAME: "Chrome",
       Origin: "https://ebank.tpb.vn",
       PLATFORM_NAME: "WEB",
-      PLATFORM_VERSION: "122",
+      PLATFORM_VERSION: "126",
       Referer: "https://ebank.tpb.vn/retail/vX/",
       SOURCE_APP: "HYDRO",
       "Sec-Fetch-Dest": "empty",
       "Sec-Fetch-Mode": "cors",
       "Sec-Fetch-Site": "same-origin",
       "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
       "sec-ch-ua":
-        '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+        '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"macOS"',
     },
@@ -37,7 +38,7 @@ async function handleLogin(username, password, deviceId) {
 
   try {
     const response = await axios.post(
-      "https://ebank.tpb.vn/gateway/api/auth/login",
+      "https://ebank.tpb.vn/gateway/api/auth/login/v3",
       data,
       config
     );
@@ -67,7 +68,7 @@ async function getHistories(token, accountId, deviceId) {
 
   const config = {
     headers: {
-      APP_VERSION: "2024.02.24",
+      APP_VERSION: "2024.06.28",
       Accept: "application/json, text/plain, */*",
       "Accept-Language": "vi,en-US;q=0.9,en;q=0.8",
       Authorization: `Bearer ${token}`,
@@ -77,7 +78,7 @@ async function getHistories(token, accountId, deviceId) {
       DEVICE_NAME: "Chrome",
       Origin: "https://ebank.tpb.vn",
       PLATFORM_NAME: "WEB",
-      PLATFORM_VERSION: "122",
+      PLATFORM_VERSION: "126",
       SOURCE_APP: "HYDRO",
       "Sec-Fetch-Dest": "empty",
       "Sec-Fetch-Mode": "cors",

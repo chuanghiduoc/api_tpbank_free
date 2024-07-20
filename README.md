@@ -6,7 +6,15 @@ API này cung cấp các endpoint để lấy lịch sử giao dịch cho khách
 
 ## Authentication
 API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cung cấp token được cấp phép để truy cập các endpoint.
-
+## TP Bank
+B1: Mở trình duyệt đã từng đăng nhập xác minh khuân mặt
+B2: Vào trang https://ebank.tpb.vn/retail/vX/ và đăng nhập
+B3: Bấm f12, tab console, paste đoạn code sau:
+```json
+localStorage.deviceId
+```
+B4: Copy giá trị trả về và sử dụng trong code
+![image info](./deviceId.png)
 ## Endpoint
 ### Lấy token
 `POST /login`
@@ -14,10 +22,12 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 #### Tham số
 - `username` (Tên đăng nhập)
 - `password` (Mật khẩu)
+- `deviceId` (deviceId lấy từ trình duyệt đã đăng nhập)
 ```json
 {
     "username": "Tên đăng nhập tpbank",
-    "password": "Mật khẩu đăng nhập"
+    "password": "Mật khẩu đăng nhập",
+    "deviceId": "deviceId lấy từ trình duyệt đã đăng nhập"
 }
 ```
 #### Phản hồi
@@ -32,10 +42,12 @@ API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cu
 #### Tham số
 - `accessToken` (Token vừa lấy được ở Login)
 - `accountId` (Số tài khoản cần lấy lịch sử)
+- `deviceId` (deviceId lấy từ trình duyệt đã đăng nhập)
 ```json
 {
     "accessToken": "Token sau khi login",
-    "accountId": "Số tài khoản"
+    "accountId": "Số tài khoản",
+    "deviceId": "deviceId lấy từ trình duyệt đã đăng nhập"
 }
 ```
 #### Phản hồi

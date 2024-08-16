@@ -4,8 +4,6 @@
 ## Giới thiệu
 API này cung cấp các endpoint để lấy lịch sử giao dịch cho khách hàng của Tpbank.
 
-## Authentication
-API yêu cầu sử dụng phương thức xác thực OAuth 2.0. Bạn cần cung cấp token được cấp phép để truy cập các endpoint.
 ## TP Bank
 B1: Mở trình duyệt đã từng đăng nhập xác minh khuân mặt
 
@@ -22,36 +20,21 @@ B4: Copy giá trị trả về và sử dụng trong code
 ![image info](./deviceId.png)
 
 ## Endpoint
-### Lấy token
-`POST /login`
+
+Config file .env thì khi sử dụng endpoint histories không cần tham số nữa
+
+### Lấy lịch sử giao dịch
+`POST /histories`
 
 #### Tham số
 - `username` (Tên đăng nhập)
 - `password` (Mật khẩu)
+- `accountId` (Số tài khoản cần lấy lịch sử)
 - `deviceId` (deviceId lấy từ trình duyệt đã đăng nhập)
 ```json
 {
     "username": "Tên đăng nhập tpbank",
     "password": "Mật khẩu đăng nhập",
-    "deviceId": "deviceId lấy từ trình duyệt đã đăng nhập"
-}
-```
-#### Phản hồi
-```json
-{
-    "accessToken": "eyJraWQiOiJNYmV1VmEVWlhVT2FJcDgwYmx1XC9sanFOQjNKZE9aSDgxQ3JGU0tpMmVcL2M9IiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOENCQy1IUzI1NiIsImFsZyI6ImRpciJ9..xXU7xUbrz3QGRp--hc1QRg.fy59WI58F9y_ffjk5uRTiNajMRtYs7fa4v8LBTlKMGgtep2cZZZX2fl7XL5wwF6Xb2ruRVJvBGsCNu2EhPaKGwRJKdVv-8GucvGeZHLehImaivDYgnjNAf__Q0L2YOglsT8E874yfCJIiWNeSN9PO8TnbOCUT7mzr-dXYE_qZTontmsZKdTNDzuKkKjABVbKmGGb5Yq-HSWviY7t1xVhVRictPjJ084eUKoRfrAeamu6WI4nCDj1UQT_PuNXS_38g62MyB_6BYbGfyrudkV3VXy7jccpV0n4ey2i_Tx6IBP7dB7OLcAvH61GWd3b9llK0lRKgSLOtkBuMWFoOav7v4xiMln9JTJt-2ANpkJ_IwPZKesUOvp5DrryC6tzHBHYLeON8e6nvxBS-tbFoFJOfSu9FB1VEC19M1ORG1TUTqvz5KtJXhiw0S-As9C6JHlnwQi4_XGs9nZjJZWzqCmfLADSayQVlgvTxPiGOlFOUa5dmdiK8ramFK8YsYDWRs-30dfr_i8FCcWU24ckbEA1j7-o6b6InmZxLzzk2uJ7o3Qwjx325NKZWQl13PB94fnr.mQpLSJGWEA2sXJFuwdHfsQ"
-}
-```
-### Lấy lịch sử giao dịch
-`POST /histories`
-
-#### Tham số
-- `accessToken` (Token vừa lấy được ở Login)
-- `accountId` (Số tài khoản cần lấy lịch sử)
-- `deviceId` (deviceId lấy từ trình duyệt đã đăng nhập)
-```json
-{
-    "accessToken": "Token sau khi login",
     "accountId": "Số tài khoản",
     "deviceId": "deviceId lấy từ trình duyệt đã đăng nhập"
 }
@@ -140,6 +123,7 @@ B4: Copy giá trị trả về và sử dụng trong code
 
 ## Hướng dẫn chạy trên Localhost cho người mới
 - Mở folder chứa code: có file index.js
+- Config file .env
 - Mở terminal hoặc cmd tại thư mục đó, chạy lệnh
 ```json
     npm i

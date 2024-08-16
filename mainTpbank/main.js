@@ -1,35 +1,12 @@
 const axios = require("axios");
 const moment = require('moment-timezone');
-const { HttpsProxyAgent } = require('https-proxy-agent');
+const { getAgent } = require('./proxyAgent');
 
-let accessToken = null;
-let clearAccessTokenTimeout = null;
-
-//Thêm proxy vào để tránh bị block, kèm nó vào trong req (config) là được
-function getAgent() {
-  const proxy = {
-    schema: process.env.PROXY_SCHEMA,
-    ip: process.env.PROXY_IP,
-    port: process.env.PROXY_PORT,
-    username: process.env.PROXY_USERNAME,
-    password: process.env.PROXY_PASSWORD,
-  };
-
-  if (!proxy.schema || !proxy.ip || !proxy.port || !proxy.username || !proxy.password) {
-    console.log("Thiếu config proxy");
-  }
-  const proxyUrl = proxy.username && proxy.username.length > 0
-    ? `${proxy.schema}://${proxy.username}:${proxy.password}@${proxy.ip}:${proxy.port}`
-    : `${proxy.schema}://${proxy.ip}:${proxy.port}`;
-
-  const httpsAgent = new HttpsProxyAgent(proxyUrl);
-
-  // console.log("httpsAgent configuration:", httpsAgent);
-
-  return httpsAgent;
-}
 
 async function handleLogin(username, password, deviceId) {
+  const cfAgent = getAgent();
+  if (cfAgent) this.cfAgent = cfAgent;
+
   const data = {
     username,
     password,
@@ -62,28 +39,18 @@ async function handleLogin(username, password, deviceId) {
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"macOS"',
     },
+    httpsAgent: this.cfAgent,
   };
-
+  // console.log('Login httpsAgent:', config.httpsAgent);
   try {
-    const response = await axios.post('https://ebank.tpb.vn/gateway/api/auth/login/v3', data, { ...config, httpsAgent: getAgent() },);
-    accessToken = response.data.access_token;
-
-    if (clearAccessTokenTimeout) {
-      clearTimeout(clearAccessTokenTimeout);
-    }
-
-    // Đặt thời gian chờ để xóa accessToken ngay trước khi hết hạn
-    clearAccessTokenTimeout = setTimeout(() => {
-      accessToken = null;
-    }, (response.data.expires_in - 10) * 1000);
-
+    const response = await axios.post('https://ebank.tpb.vn/gateway/api/auth/login/v3', data, config,);
     return response.data;
   } catch (error) {
     throw error;
   }
 }
 
-async function getHistories(token, accountId, deviceId) {
+async function getHistories(token, accountId, deviceId, username, password) {
   const days = process.env.DAYS || 30;
 
   const fromDate = moment()
@@ -127,17 +94,31 @@ async function getHistories(token, accountId, deviceId) {
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"macOS"',
     },
+    httpsAgent: this.cfAgent,
   };
-
+  // console.log('Histories httpsAgent:', config.httpsAgent);
   try {
     const response = await axios.post(
       "https://ebank.tpb.vn/gateway/api/smart-search-presentation-service/v2/account-transactions/find",
       data,
-      { ...config, httpsAgent: getAgent() },
+      config,
     );
     return response.data;
   } catch (error) {
-    throw error;
+    // Nếu có lỗi và mã thông báo có thể đã hết hạn, hãy thử đăng nhập lại
+    if (error.response && error.response.status === 401) {
+      console.log("Mã thông báo đã hết hạn, đang đăng nhập lại...");
+      try {
+        const loginResponse = await handleLogin(username, password, deviceId);
+        const newToken = loginResponse.access_token;
+        return await getHistories(newToken, accountId, deviceId, username, password);
+      } catch (loginError) {
+        console.error("Đăng nhập lại không thành công:", loginError.message);
+        throw loginError; // Ném lỗi nếu không thể đăng nhập lại
+      }
+    } else {
+      throw error;
+    }
   }
 }
 

@@ -4,6 +4,8 @@ const { handleLogin, getHistories } = require("./mainTpbank/main");
 const cors = require("cors");
 
 let accessToken = null;
+let refreshTokenTimeout = null; 
+let accessTokenExpiry = null;
 
 require('dotenv').config();
 
@@ -12,18 +14,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.post("/login", async (req, res) => {
-  try {
-    const { username, password, deviceId } = req.body;
-    const login = await handleLogin(username, password, deviceId);
-    return res.json({ accessToken: login });
-  } catch (error) {
-    res.json({error : error.data})
-  }
-});
-
 app.post("/histories", async (req, res) => {
-  try {    
+  try {
     const username = req.body.username || process.env.USERNAME;
     const password = req.body.password || process.env.PASSWORD;
     const deviceId = req.body.deviceId || process.env.DEVICE_ID;
@@ -34,20 +26,31 @@ app.post("/histories", async (req, res) => {
     }
 
     // Nếu chưa có token hoặc token đã hết hạn thì đăng nhập lại
-    if (!accessToken) {
+    if (!accessToken || Date.now() >= accessTokenExpiry) {
       console.log('Token hết hạn hoặc chưa có, đang đăng nhập lại...');
       const loginResponse = await handleLogin(username, password, deviceId);
       accessToken = loginResponse.access_token;
+      accessTokenExpiry = Date.now() + (loginResponse.expires_in - 10) * 1000;
+      // Đặt thời gian chờ để làm mới token
+      if (refreshTokenTimeout) {
+        clearTimeout(refreshTokenTimeout);
+      }
+      refreshTokenTimeout = setTimeout(async () => {
+        try {
+          console.log('Token hết hạn, đang đăng nhập lại...');
+          const newLoginResponse = await handleLogin(username, password, deviceId);
+          accessToken = newLoginResponse.access_token;
+          accessTokenExpiry = Date.now() + (newLoginResponse.expires_in - 10) * 1000;
+        } catch (error) {
+          console.error('Lỗi khi làm mới token:', error.message);
+        }
+      }, (loginResponse.expires_in - 10) * 1000);
     }
     console.log(accessToken);
 
     // Lấy lịch sử giao dịch sử dụng token từ đăng nhập
-    const histories = await getHistories(accessToken, accountId, deviceId);
+    const histories = await getHistories(accessToken, accountId, deviceId, username, password);
 
-    //Lấy dữ liệu ở trường creditDebitIndicator = CRDT (Cộng tiền), DBIT(Trừ tiền) 
-    // const filteredTransactions = histories.transactionInfos.filter(transaction => transaction.creditDebitIndicator === 'CRDT');
-    // //Lọc và loại bỏ dữ liệu có trường Category
-    // const transactionsWithoutCategory = filteredTransactions.map(({ category, ...transaction }) => transaction);
     return res.json({ info: histories });
   } catch (error) {
     return res.status(error.response ? error.response.status : 500).json({ error: error.message });

@@ -13,7 +13,10 @@
     "axios": "^1.6.7",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
     "express": "^4.18.3",
+    "https-proxy-agent": "^7.0.5",
     "moment-timezone": "^0.5.45",
     "nodemon": "^3.1.0"
   }

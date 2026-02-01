@@ -1,23 +1,26 @@
 {
-  "name": "tpbank",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "tpbank-api",
+  "version": "2.0.0",
+  "description": "TPBank transaction history API",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "axios": "^1.13.2",
-    "body-parser": "^2.2.1",
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "axios": "^1.13.4",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
     "https-proxy-agent": "^7.0.6",
-    "moment-timezone": "^0.6.0",
+    "moment-timezone": "^0.5.48"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.11"
   }
 }

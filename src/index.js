@@ -1,12 +1,11 @@
-require('dotenv').config();
-
-const { createApp } = require('./app');
+const TPBankClient = require('./TPBankClient');
+const { TPBankError, AuthenticationError, TokenExpiredError } = require('./utils/errors');
 const { DEFAULTS } = require('./config/constants');
 
-const PORT = process.env.PORT || DEFAULTS.PORT;
-const app = createApp();
-
-app.listen(PORT, () => {
-  console.log(`TPBank API server running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-});
+module.exports = {
+  TPBankClient,
+  TPBankError,
+  AuthenticationError,
+  TokenExpiredError,
+  DEFAULTS,
+};

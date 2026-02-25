@@ -1,22 +1,27 @@
 const { HttpsProxyAgent } = require('https-proxy-agent');
 
 /**
- * Creates an HTTPS proxy agent from environment variables
- * @returns {HttpsProxyAgent|null} Proxy agent or null if not configured
+ * Creates an HTTPS proxy agent from config object
+ * @param {Object} proxyConfig - Proxy configuration
+ * @param {string} proxyConfig.schema - Protocol schema (e.g. 'http', 'https')
+ * @param {string} proxyConfig.host - Proxy host/IP
+ * @param {number} proxyConfig.port - Proxy port
+ * @param {string} [proxyConfig.username] - Proxy username (optional)
+ * @param {string} [proxyConfig.password] - Proxy password (optional)
+ * @returns {HttpsProxyAgent|null} Proxy agent or null if config is invalid
  */
-function createProxyAgent() {
-  const { PROXY_SCHEMA, PROXY_IP, PROXY_PORT, PROXY_USERNAME, PROXY_PASSWORD } = process.env;
-
-  // Check required proxy config
-  if (!PROXY_SCHEMA || !PROXY_IP || !PROXY_PORT) {
+function createProxyAgent(proxyConfig) {
+  if (!proxyConfig || !proxyConfig.schema || !proxyConfig.host || !proxyConfig.port) {
     return null;
   }
 
+  const { schema, host, port, username, password } = proxyConfig;
+
   // Build proxy URL
-  const hasAuth = PROXY_USERNAME && PROXY_PASSWORD;
+  const hasAuth = username && password;
   const proxyUrl = hasAuth
-    ? `${PROXY_SCHEMA}://${PROXY_USERNAME}:${PROXY_PASSWORD}@${PROXY_IP}:${PROXY_PORT}`
-    : `${PROXY_SCHEMA}://${PROXY_IP}:${PROXY_PORT}`;
+    ? `${schema}://${username}:${password}@${host}:${port}`
+    : `${schema}://${host}:${port}`;
 
   try {
     return new HttpsProxyAgent(proxyUrl);

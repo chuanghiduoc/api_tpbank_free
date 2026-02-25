@@ -39,7 +39,6 @@ const DEFAULTS = {
   PAGE_SIZE: 400,
   CURRENCY: 'VND',
   TIMEZONE: 'Asia/Ho_Chi_Minh',
-  PORT: 3000,
   TOKEN_REFRESH_BUFFER_SECONDS: 60, // Refresh token 60 seconds before expiry
 };
 

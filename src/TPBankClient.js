@@ -1,8 +1,8 @@
 const axios = require('axios');
 const moment = require('moment-timezone');
-const { API_ENDPOINTS, DEFAULT_HEADERS, DEFAULTS } = require('../config/constants');
-const { createProxyAgent } = require('../utils/proxyAgent');
-const { AuthenticationError, TokenExpiredError, TPBankError } = require('../utils/errors');
+const { API_ENDPOINTS, DEFAULT_HEADERS, DEFAULTS } = require('./config/constants');
+const { createProxyAgent } = require('./utils/proxyAgent');
+const { AuthenticationError, TokenExpiredError, TPBankError } = require('./utils/errors');
 
 /**
  * TPBank API Client
@@ -17,7 +17,7 @@ class TPBankClient {
 
     this.accessToken = null;
     this.tokenExpiry = null;
-    this.proxyAgent = createProxyAgent();
+    this.proxyAgent = credentials.proxy ? createProxyAgent(credentials.proxy) : null;
   }
 
   /**
@@ -97,7 +97,6 @@ class TPBankClient {
         throw error;
       }
 
-      const statusCode = error.response?.status || 500;
       const message = error.response?.data?.message || error.message;
       throw new AuthenticationError(`Login failed: ${message}`, error);
     }
@@ -118,7 +117,7 @@ class TPBankClient {
    */
   async getTransactionHistory(options = {}) {
     const {
-      days = parseInt(process.env.DAYS, 10) || DEFAULTS.DAYS,
+      days = DEFAULTS.DAYS,
       pageNumber = 1,
       pageSize = DEFAULTS.PAGE_SIZE,
       keyword = '',

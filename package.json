@@ -38,5 +38,8 @@
     "axios": "^1.13.5",
     "https-proxy-agent": "^7.0.6",
     "moment-timezone": "^0.6.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1"
   }
 }

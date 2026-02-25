@@ -65,7 +65,7 @@ async function main() {
   console.log(`Tìm thấy ${data.transactionInfos.length} giao dịch:\n`);
   for (const tx of data.transactionInfos) {
     const amount = Number(tx.amount).toLocaleString('vi-VN');
-    const sign = tx.type === 'Credit' ? '+' : '-';
+    const sign = tx.creditDebitIndicator === 'CRDT' ? '+' : '-';
     console.log(`  ${tx.id} | ${sign}${amount} VND | ${tx.description}`);
   }
 }

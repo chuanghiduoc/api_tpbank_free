@@ -18,14 +18,6 @@ class AuthenticationError extends TPBankError {
   }
 }
 
-class ValidationError extends TPBankError {
-  constructor(message = 'Validation failed', fields = []) {
-    super(message, 400);
-    this.name = 'ValidationError';
-    this.fields = fields;
-  }
-}
-
 class TokenExpiredError extends TPBankError {
   constructor(message = 'Token expired') {
     super(message, 401);
@@ -36,6 +28,5 @@ class TokenExpiredError extends TPBankError {
 module.exports = {
   TPBankError,
   AuthenticationError,
-  ValidationError,
   TokenExpiredError,
 };

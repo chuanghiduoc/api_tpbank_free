@@ -152,16 +152,19 @@ class TPBankClient {
     } catch (error) {
       // Handle token expiration
       if (error.response?.status === 401) {
-        // Clear current token and retry once
-        this.accessToken = null;
-        this.tokenExpiry = null;
+        this.clear();
 
-        const newToken = await this.ensureAuthenticated();
-        const retryHeaders = this.buildHeaders(newToken);
-        const retryConfig = this.buildAxiosConfig(retryHeaders);
+        try {
+          const newToken = await this.ensureAuthenticated();
+          const retryHeaders = this.buildHeaders(newToken);
+          const retryConfig = this.buildAxiosConfig(retryHeaders);
 
-        const retryResponse = await axios.post(API_ENDPOINTS.TRANSACTIONS, data, retryConfig);
-        return retryResponse.data;
+          const retryResponse = await axios.post(API_ENDPOINTS.TRANSACTIONS, data, retryConfig);
+          return retryResponse.data;
+        } catch (retryError) {
+          this.clear();
+          throw new TokenExpiredError('Token expired and re-login failed');
+        }
       }
 
       const statusCode = error.response?.status || 500;

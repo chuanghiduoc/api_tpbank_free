@@ -1,5 +1,7 @@
 # @chuanghiduoc/tpbank
 
+[![npm version](https://img.shields.io/npm/v/@chuanghiduoc/tpbank)](https://www.npmjs.com/package/@chuanghiduoc/tpbank)
+
 TPBank API client cho Node.js - Lấy lịch sử giao dịch TPBank.
 
 ## Cài đặt
@@ -127,6 +129,32 @@ try {
   }
 }
 ```
+
+## Release (cho maintainer)
+
+Package được tự động publish lên npm thông qua GitHub Actions khi push tag `v*.*.*`.
+
+```bash
+# Bump version + tạo tag + push → auto publish lên npm
+npm run release:patch   # 1.0.0 → 1.0.1
+npm run release:minor   # 1.0.0 → 1.1.0
+npm run release:major   # 1.0.0 → 2.0.0
+```
+
+Hoặc thủ công:
+
+```bash
+npm version patch
+git push && git push --tags
+```
+
+### Setup lần đầu
+
+Thêm secret `NPM_TOKEN` vào GitHub repo:
+
+1. Tạo Access Token tại [npmjs.com/settings/tokens](https://www.npmjs.com/settings/tokens) (type: **Automation**)
+2. Vào repo GitHub → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+3. Name: `NPM_TOKEN`, Value: token vừa tạo
 
 ## Miễn trừ trách nhiệm
 

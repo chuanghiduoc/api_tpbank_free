@@ -10,7 +10,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "npm pack --dry-run"
+    "prepublishOnly": "npm pack --dry-run",
+    "release:patch": "npm version patch",
+    "release:minor": "npm version minor",
+    "release:major": "npm version major",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "tpbank",

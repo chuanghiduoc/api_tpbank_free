@@ -1,18 +1,21 @@
-name: Publish to npm
+name: Auto Release & Publish to npm
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,10 +26,61 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify package
-        run: npm pack --dry-run
+      - name: Determine version bump
+        id: version
+        run: |
+          # Lấy commit messages từ tag gần nhất
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline)
+          else
+            COMMITS=$(git log ${LAST_TAG}..HEAD --oneline)
+          fi
+
+          # Nếu không có commits mới → skip
+          if [ -z "$COMMITS" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Xác định bump type dựa trên conventional commits
+          if echo "$COMMITS" | grep -qiE "BREAKING CHANGE|^[a-z]+!:"; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -qiE "^feat"; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Check if version already published
+        if: steps.version.outputs.skip != 'true'
+        id: check
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view tpbank-api version 2>/dev/null || echo "0.0.0")
+          if [ "$CURRENT" != "$PUBLISHED" ]; then
+            # Version local khác npm → có thể đã bump thủ công
+            echo "need_bump=false" >> $GITHUB_OUTPUT
+          else
+            echo "need_bump=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        if: steps.version.outputs.skip != 'true' && steps.check.outputs.need_bump == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm version ${{ steps.version.outputs.bump }} -m "release: v%s"
+
+      - name: Push tag & version
+        if: steps.version.outputs.skip != 'true' && steps.check.outputs.need_bump == 'true'
+        run: git push --follow-tags
 
       - name: Publish to npm
+        if: steps.version.outputs.skip != 'true'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

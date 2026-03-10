@@ -1,6 +1,6 @@
 {
-  "name": "@chuanghiduoc/tpbank",
-  "version": "1.0.0",
+  "name": "tpbank-api",
+  "version": "2.0.1",
   "description": "TPBank API client - Lấy lịch sử giao dịch TPBank",
   "main": "src/index.js",
   "types": "src/index.d.ts",

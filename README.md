@@ -1,13 +1,13 @@
-# @chuanghiduoc/tpbank
+# tpbank-api
 
-[![npm version](https://img.shields.io/npm/v/@chuanghiduoc/tpbank)](https://www.npmjs.com/package/@chuanghiduoc/tpbank)
+[![npm version](https://img.shields.io/npm/v/tpbank-api)](https://www.npmjs.com/package/tpbank-api)
 
 TPBank API client cho Node.js - Lấy lịch sử giao dịch TPBank.
 
 ## Cài đặt
 
 ```bash
-npm install @chuanghiduoc/tpbank
+npm install tpbank-api
 ```
 
 ## Lấy Device ID
@@ -23,7 +23,7 @@ npm install @chuanghiduoc/tpbank
 ## Sử dụng
 
 ```js
-const { TPBankClient } = require('@chuanghiduoc/tpbank');
+const { TPBankClient } = require('tpbank-api');
 
 const client = new TPBankClient({
   username: 'your_username',
@@ -40,7 +40,7 @@ console.log(data);
 ### ESM
 
 ```js
-import { TPBankClient } from '@chuanghiduoc/tpbank';
+import { TPBankClient } from 'tpbank-api';
 ```
 
 ## API
@@ -115,7 +115,7 @@ const client = new TPBankClient({
 ## Xử lý lỗi
 
 ```js
-const { TPBankClient, AuthenticationError, TokenExpiredError, TPBankError } = require('@chuanghiduoc/tpbank');
+const { TPBankClient, AuthenticationError, TokenExpiredError, TPBankError } = require('tpbank-api');
 
 try {
   const data = await client.getTransactionHistory();
